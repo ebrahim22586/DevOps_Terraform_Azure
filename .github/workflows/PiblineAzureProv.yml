@@ -45,7 +45,7 @@ jobs:
      steps:
        - uses: actions/checkout@v4
        - run:  |
-              echo "there are all repo files"
+              echo "there are all repo files from  ${{ inputs.environment }}"
               ls -l
   
 
