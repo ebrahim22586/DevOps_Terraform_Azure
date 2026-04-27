@@ -43,10 +43,22 @@ jobs:
              - STG
              - PRD
      steps:
-       - uses: actions/checkout@v4
-       - run:  |
-              echo "there are all repo files from  ${{ inputs.environment }}"
-              ls -l
+        - uses: actions/checkout@v4
+        - name: Setup Terraform
+          uses: hashicorp/setup-terraform@v3
+          with:
+            terraform_version: ${{ env.TF_VERSION }}
+
+        - name: Terraform Format Check
+          run: terraform fmt -check -recursive
+
+        - name: Terraform Init (no backend)
+          working-directory: environments/${{ matrix.environment }}
+          run: terraform init -backend=false
+
+        - name: Terraform Validate
+          working-directory: environments/${{ matrix.environment }}
+          run: terraform validate
   
 
 
