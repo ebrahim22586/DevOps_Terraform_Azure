@@ -6,23 +6,23 @@ on:
       - TST
       - STG
       - main
-    paths:
-      - 'Terraform/**'
+    paths: ['Terraform/**']
   pull_request:     
       branches:
         - TST
         - STG
         - main
-    paths:
-      - 'Terraform/**'
+      paths: ['Terraform/**']
   workflow_dispatch:
     inputs:
       environment:
         type: choice
         options:
-           - TST
-           - STG
-           - PRD
+            - TST
+            - STG
+            - PRD
+     
+  
 permissions:
  id-token: write
  contents: read
