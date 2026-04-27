@@ -1,0 +1,58 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Terraform Multi-Environment Pipeline
+on:
+  push:
+    branches:
+      - TST
+      - STG
+      - main
+    paths:
+      - 'Terraform/**'
+  pull_request:     
+      branches:
+      - TST
+      - STG
+      - main
+    paths:
+      - 'Terraform/**'
+  
+  workflow_dispatch:
+   inputs:
+     environment:
+      type: choice
+      options:
+        - TST
+        - STG
+        - PRD
+permissions:
+ id-token: write
+ contents: read
+#---------------------
+# resuable environment matrix
+#---------------------
+env:
+  ARM_TENANT_ID: ${{ secrets.Tenenat_id }} 
+  ARM_USE_ODIC: "true"
+  TF_VERSION: "1~1.7"
+
+jobs:
+  validate:
+     name: validate&Scan
+     runs-on: ubuntu-latest
+     strategy:
+       matrix:
+         environment: 
+             - TST
+             - STG
+             - PRD
+     steps:
+       - uses: actions/checkout@v4
+       - run:  |
+              echo "there are all repo files"
+              ls -l
+  
+
+
+
+ 
