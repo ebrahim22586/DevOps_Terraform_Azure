@@ -49,12 +49,27 @@ jobs:
           with:
             terraform_version: ${{ env.TF_VERSION }}
 
-        - name: Terraform Format Check
-          run: terraform fmt -check -recursive
+        - name: Check if Terraform exists
+          run: |
+              if command -v terraform >/dev/null 2>&1; then
+              echo "Terraform already installed"
+              terraform version
+              else
+              echo "Installing Terraform..."
+              sudo apt-get update
+              sudo apt-get install -y wget unzip
+              wget https://releases.hashicorp.com/terraform/1.7.5/terraform_1.7.5_linux_amd64.zip
+              unzip terraform_1.7.5_linux_amd64.zip
+              sudo mv terraform /usr/local/bin/
+              terraform version
+              fi
 
-        - name: Terraform Init (no backend)
+        - name: Terraform Format Check
+          run: terraform fmt 
+
+        - name: Terraform Init 
           working-directory: environments/${{ matrix.environment }}
-          run: terraform init -backend=false
+          run: terraform init 
 
         - name: Terraform Validate
           working-directory: environments/${{ matrix.environment }}
