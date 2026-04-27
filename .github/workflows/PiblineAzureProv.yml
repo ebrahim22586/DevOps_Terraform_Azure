@@ -1,14 +1,14 @@
 on:
   push:
     branches:
-      - TST
-      - STG
+      - Develope
+      - Feature
       - main
     paths: ['Terraform/**']
   pull_request:     
       branches:
-        - TST
-        - STG
+        - Develope
+        - Feature
         - main
       paths: ['Terraform/**']
   workflow_dispatch:
@@ -16,9 +16,9 @@ on:
       environment:
         type: choice
         options:
-            - TST
-            - STG
-            - PRD
+          - Develope
+          - Feature
+          - main
      
   
 permissions:
