@@ -11,20 +11,20 @@ on:
       - 'Terraform/**'
   pull_request:     
       branches:
-      - TST
-      - STG
-      - main
+        - TST
+        - STG
+        - main
     paths:
       - 'Terraform/**'
   
   workflow_dispatch:
-   inputs:
-     environment:
-      type: choice
-      options:
-        - TST
-        - STG
-        - PRD
+    inputs:
+      environment:
+        type: choice
+        options:
+           - TST
+           - STG
+           - PRD
 permissions:
  id-token: write
  contents: read
@@ -33,7 +33,7 @@ permissions:
 #---------------------
 env:
   ARM_TENANT_ID: ${{ secrets.Tenenat_id }} 
-  ARM_USE_ODIC: "true"
+  ARM_USE_OIDC: "true"
   TF_VERSION: "1~1.7"
 
 jobs:
