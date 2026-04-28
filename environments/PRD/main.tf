@@ -39,7 +39,7 @@ provider "azurerm" {
 
 
 provider "azurerm" {
-  alias = "SUb-PRD"
+  alias = "Sub-PRD"
   features {}
   tenant_id       = var.IB_Tenant_id
   subscription_id = var.IB_Sub_PRD
