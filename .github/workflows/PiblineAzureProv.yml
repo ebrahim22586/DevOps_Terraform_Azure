@@ -80,6 +80,9 @@ jobs:
   plan-tst:
     name:  Plan 
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write       # Required for azure/login@v3 OIDC
+      contents: read
 #S    needs: validate
     if: |
       github.ref == 'refs/heads/develope' 
