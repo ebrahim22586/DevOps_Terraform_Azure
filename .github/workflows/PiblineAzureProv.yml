@@ -39,6 +39,7 @@ env:
   ARM_TENANT_ID: ${{ secrets.IB_TENANT }}
   ARM_USE_OIDC: "true"
   TF_VERSION: "~1.7"
+  WD: 'terraform/STG'
 
 jobs:
 
@@ -63,10 +64,10 @@ jobs:
         run: terraform fmt -check -recursive
 
       - name: Terraform Init (no backend)
-        working-directory: Terraform    # environments/${{ matrix.environment }}
+        working-directory: ${{ env.WD }}   # environments/${{ matrix.environment }}
         run: terraform init -backend=false
 
       - name: Terraform Validate
-        working-directory: Terraform     # environments/${{ matrix.environment }}
+        working-directory: ${{ env.WD }}    # environments/${{ matrix.environment }}
         run: terraform validate
 
