@@ -83,7 +83,7 @@ resource "azurerm_network_interface" "SH_nic_un" {
 }
 
 resource "azurerm_network_interface_security_group_association" "SH_nic_nsg_un" {
-  provider                  = azurerm.Sub-TST
+  provider                  = azurerm.Sub-STG
   network_interface_id      = azurerm_network_interface.SH_nic_un.id
   network_security_group_id = azurerm_network_security_group.SH_nsg_un.id
 }
