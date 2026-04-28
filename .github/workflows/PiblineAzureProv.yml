@@ -71,3 +71,54 @@ jobs:
         working-directory: ${{ env.WD }}    # environments/${{ matrix.environment }}
         run: terraform validate
 
+
+# ══════════════════════════════════════════════
+# STAGE 1 — TEST ENVIRONMENT (develop branch)
+# ══════════════════════════════════════════════
+  plan-tst:
+    name:  Plan 
+    runs-on: ubuntu-latest
+    needs: validate
+    if: |
+      github.ref == 'refs/heads/develope' 
+     
+    environment: plan-tst
+    env:
+      ARM_CLIENT_ID: ${{ secrets.IB_CLIENTID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.IB_SUB }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login — TST
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.IB_CLIENTID }}
+          tenant-id: ${{ secrets.IB_TENANT }}
+          subscription-id: ${{ secrets.IB_SUB }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        working-directory: ${{ env.WD  }}
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: ${{ env.WD  }}
+        run: |
+          terraform plan \
+            -var-file="STG.tfvars" \
+            -out=tfplan-STG 
+
+
+
+
+      - name: Upload TST Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan-STG
+          path: ${{ env.WD }}
+          retention-days: 3
