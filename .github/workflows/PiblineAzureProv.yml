@@ -46,13 +46,13 @@ jobs:
 # STAGE 0 — VALIDATE & SCAN (all branches)
 # ══════════════════════════════════════════════
   validate:
-    name: 🔍 Validate & Lint
+    name:  Validate & Lint
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        environment: [TST, STG, PRD]
+#    strategy:
+#      matrix:
+#        environment: [tst, stg, prd]
     steps:
-      - uses: actions/checkout@v4 
+      - uses: actions/checkout@v4
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -60,12 +60,13 @@ jobs:
           terraform_version: ${{ env.TF_VERSION }}
 
       - name: Terraform Format Check
-        run: terraform fmt 
+        run: terraform fmt -check -recursive
 
       - name: Terraform Init (no backend)
-        working-directory: environments/${{ matrix.environment }}
+        working-directory: Terraform    # environments/${{ matrix.environment }}
         run: terraform init -backend=false
 
       - name: Terraform Validate
-        working-directory: environments/${{ matrix.environment }}
+        working-directory: Terraform     # environments/${{ matrix.environment }}
         run: terraform validate
+
