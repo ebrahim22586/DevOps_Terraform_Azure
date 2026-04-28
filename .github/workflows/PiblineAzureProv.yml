@@ -9,7 +9,7 @@ on:
       - main        # → PRD
     paths:
       - 'environments/**'
-      - 'modules/**'
+    
   pull_request:
     branches:
       - develop
@@ -17,7 +17,8 @@ on:
       - main
     paths:
       - 'environments/**'
-      - 'modules/**'
+
+
 
 permissions:
   id-token: write
