@@ -1,82 +1,63 @@
+# .github/workflows/terraform.yml
+name: Terraform Multi-Environment Pipeline
+
 on:
   push:
     branches:
-      - Develope
-      - Feature
+      - develop     # → TST
+      - staging     # → STG
+      - main        # → PRD
+    paths:
+      - 'environments/**'
+      - 'modules/**'
+  pull_request:
+    branches:
+      - develop
+      - staging
       - main
-    paths: ['Terraform/**']
-  pull_request:     
-      branches:
-        - Develope
-        - Feature
-        - main
-      paths: ['Terraform/**']
-  workflow_dispatch:
-    inputs:
-      environment:
-        type: choice
-        options:
-          - Develope
-          - Feature
-          - main
-     
-  
+    paths:
+      - 'environments/**'
+      - 'modules/**'
+
 permissions:
- id-token: write
- contents: read
-#---------------------
-# resuable environment matrix
-#---------------------
+  id-token: write
+  contents: read
+  pull-requests: write
+
+# ──────────────────────────────────────────────
+# REUSABLE ENV MATRIX
+# ──────────────────────────────────────────────
 env:
-  ARM_TENANT_ID: ${{ secrets.Tenenat_id }} 
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
   ARM_USE_OIDC: "true"
-  TF_VERSION: "1~1.7"
-  
+  TF_VERSION: "~1.7"
 
 jobs:
+
+# ══════════════════════════════════════════════
+# STAGE 0 — VALIDATE & SCAN (all branches)
+# ══════════════════════════════════════════════
   validate:
-     name: validate&Scan
-     runs-on: ubuntu-latest
-   #  strategy:
-     #  matrix:
-      #   environment: 
-          #   - TST
-           #  - STG
-           #  - PRD
-     steps:
-        - uses: actions/checkout@v4
-        - name: Setup Terraform
-          uses: hashicorp/setup-terraform@v3
-          with:
-            terraform_version: ${{ env.TF_VERSION }}
+    name: 🔍 Validate & Lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [tst, stg, prd]
+    steps:
+      - uses: actions/checkout@v4
 
-        - name: Check if Terraform exists
-          run: |
-              if command -v terraform >/dev/null 2>&1; then
-              echo "Terraform already installed"
-              terraform version
-              else
-              echo "Installing Terraform..."
-              sudo apt-get update
-              sudo apt-get install -y wget unzip
-              wget https://releases.hashicorp.com/terraform/1.7.5/terraform_1.7.5_linux_amd64.zip
-              unzip terraform_1.7.5_linux_amd64.zip
-              sudo mv terraform /usr/local/bin/
-              terraform version
-              fi
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
 
-        - name: Terraform Format Check
-          run: terraform fmt 
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
 
-        - name: Terraform Init 
-          run: terraform init 
+      - name: Terraform Init (no backend)
+        working-directory: environments/${{ matrix.environment }}
+        run: terraform init -backend=false
 
-        - name: Terraform Validate
-          run: terraform validate
-
-        - name: Terraform plan 
-          run: terraform plan
-
-
-
- 
+      - name: Terraform Validate
+        working-directory: environments/${{ matrix.environment }}
+        run: terraform validate
