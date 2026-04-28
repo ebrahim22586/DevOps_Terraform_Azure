@@ -1,28 +1,23 @@
-
 ########## RG ########
 resource "azurerm_resource_group" "rg_SelfHosted_Vm_un" {
   provider = azurerm.Sub-TST
-  name     = "RG-TST-UN"
+  name     = "RG-STG-UN"
   location = "UAE North"
 }
-
 
 ###### VNet ########
 resource "azurerm_virtual_network" "vnet_SelfHosted_Vm_un" {
   provider            = azurerm.Sub-TST
-  name                = "VNet-SelfHosted-Vm-UN"
+  name                = "VNet-SelfHosted-STG"
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   address_space       = ["10.10.16.0/24"]
 }
 
-# Identity Subnets
 locals {
   VNet_subnets = {
-    "SNet-Self-Hosted-UN" = "10.10.16.0/27"
-    "SNet-Bastion-UN"     = "10.10.17.0/27"
-
-
+    "SNet-Self-Hosted-STG" = "10.10.16.0/27"
+    "SNet-Bastion-STG"     = "10.10.17.0/27"
   }
 }
 
@@ -35,14 +30,12 @@ resource "azurerm_subnet" "VNet_subnets" {
   address_prefixes     = [each.value]
 }
 
-#### VM   ##########
-
 ########################
 # Public IP
 ########################
 resource "azurerm_public_ip" "SH_pip_un" {
   provider            = azurerm.Sub-TST
-  name                = "PIP-JumpBox-UN"
+  name                = "PIP-SH-STG"
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
 
@@ -51,41 +44,39 @@ resource "azurerm_public_ip" "SH_pip_un" {
 }
 
 ########################
-# NSG SH_VM Box
+# NSG
 ########################
 resource "azurerm_network_security_group" "SH_nsg_un" {
   provider            = azurerm.Sub-TST
-  name                = "NSG-SH-UN"
+  name                = "NSG-SH-STG"
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
 
   security_rule {
-    name                   = "Allow-RDP"
-    priority               = 1000
-    direction              = "Inbound"
-    access                 = "Allow"
-    protocol               = "Tcp"
-    source_port_range      = "*"
-    destination_port_range = "3389"
-
-
+    name                       = "Allow-RDP"
+    priority                   = 1000
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3389"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
 }
 
 ########################
-# NIC SNet-MGMT-UN
+# NIC
 ########################
 resource "azurerm_network_interface" "SH_nic_un" {
   provider            = azurerm.Sub-TST
-  name                = "NIC-SH-UN"
+  name                = "NIC-SH-STG"
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
 
   ip_configuration {
-    name                          = "ipconfig1"
-    subnet_id                     = azurerm_subnet.hub_subnets["SNet-Self-Hosted-UN"].id
+    name                          = "ipconfig1STG"
+    subnet_id                     = azurerm_subnet.VNet_subnets["SNet-Self-Hosted-STG"].id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.SH_pip_un.id
   }
@@ -98,30 +89,31 @@ resource "azurerm_network_interface_security_group_association" "SH_nic_nsg_un" 
 }
 
 ########################
-# Windows Jump Box VM
+# Ubuntu VM
 ########################
-resource "azurerm_windows_virtual_machine" "VM_Self_Hosted_un" {
+resource "azurerm_ubuntu_virtual_machine" "VM_Self_Hosted_un" {
   provider            = azurerm.Sub-TST
-  name                = "VM_Self_Hosted-UN"
+  name                = "VM_Self_Hosted-STG"
+
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
 
-  size           = "Standard_D2_v3" # 
+  size           = "Standard_D2_v3"
   admin_username = var.SH_VM_User
-  admin_password = var.SH_VM_Pass # pull password from key vault
+  admin_password = var.SH_VM_Pass
+
+  disable_password_authentication = false
 
   network_interface_ids = [
     azurerm_network_interface.SH_nic_un.id
   ]
 
-
   os_disk {
-    name                 = "OSDisk-SH-UN"
+    name                 = "OSDisk-SH-STG"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
 
-  # Windows Server OS only
   source_image_reference {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
@@ -129,13 +121,13 @@ resource "azurerm_windows_virtual_machine" "VM_Self_Hosted_un" {
     version   = "latest"
   }
 
-  computer_name = "SelfHostedAgent"
+  computer_name = "SelfHostedAgSTG"
 }
 
 ########################
-# Output Public IP
+# Output
 ########################
 output "SH_un_public_ip" {
   value       = azurerm_public_ip.SH_pip_un.ip_address
-  description = "RDP to this IP on port 3389"
+  description = "Connect to this IP"
 }

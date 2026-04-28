@@ -2,7 +2,7 @@
 ########## RG ########
 resource "azurerm_resource_group" "rg_SelfHosted_Vm_un" {
   provider = azurerm.Sub-TST
-  name     = "RG-TST-UN"
+  name     = "RG-PRD-UN"
   location = "UAE North"
 }
 
@@ -10,7 +10,7 @@ resource "azurerm_resource_group" "rg_SelfHosted_Vm_un" {
 ###### VNet ########
 resource "azurerm_virtual_network" "vnet_SelfHosted_Vm_un" {
   provider            = azurerm.Sub-TST
-  name                = "VNet-SelfHosted-Vm-UN"
+  name                = "VNet-SelfHosted-PRD"
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   address_space       = ["10.10.16.0/24"]
@@ -19,8 +19,8 @@ resource "azurerm_virtual_network" "vnet_SelfHosted_Vm_un" {
 # Identity Subnets
 locals {
   VNet_subnets = {
-    "SNet-Self-Hosted-UN" = "10.10.16.0/27"
-    "SNet-Bastion-UN"     = "10.10.17.0/27"
+    "SNet-Self-Hosted-PRD" = "10.10.16.0/27"
+    "SNet-Bastion-PRD"     = "10.10.17.0/27"
 
 
   }
@@ -42,7 +42,7 @@ resource "azurerm_subnet" "VNet_subnets" {
 ########################
 resource "azurerm_public_ip" "SH_pip_un" {
   provider            = azurerm.Sub-TST
-  name                = "PIP-JumpBox-UN"
+  name                = "PIP-SH-PRD"
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
 
@@ -55,7 +55,7 @@ resource "azurerm_public_ip" "SH_pip_un" {
 ########################
 resource "azurerm_network_security_group" "SH_nsg_un" {
   provider            = azurerm.Sub-TST
-  name                = "NSG-SH-UN"
+  name                = "NSG-SH-PRD"
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
 
@@ -79,12 +79,12 @@ resource "azurerm_network_security_group" "SH_nsg_un" {
 ########################
 resource "azurerm_network_interface" "SH_nic_un" {
   provider            = azurerm.Sub-TST
-  name                = "NIC-SH-UN"
+  name                = "NIC-SH-PRD"
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
 
   ip_configuration {
-    name                          = "ipconfig1"
+    name                          = "ipconfig1PRD"
     subnet_id                     = azurerm_subnet.hub_subnets["SNet-Self-Hosted-UN"].id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.SH_pip_un.id
@@ -100,28 +100,29 @@ resource "azurerm_network_interface_security_group_association" "SH_nic_nsg_un" 
 ########################
 # Windows Jump Box VM
 ########################
-resource "azurerm_windows_virtual_machine" "VM_Self_Hosted_un" {
+resource "azurerm_ubuntu_virtual_machine" "VM_Self_Hosted_un" {
   provider            = azurerm.Sub-TST
-  name                = "VM_Self_Hosted-UN"
+  name                = "VM_Self_Hosted-PRD"
+
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
 
-  size           = "Standard_D2_v3" # 
+  size           = "Standard_D2_v3"
   admin_username = var.SH_VM_User
-  admin_password = var.SH_VM_Pass # pull password from key vault
+  admin_password = var.SH_VM_Pass
+
+  disable_password_authentication = false
 
   network_interface_ids = [
     azurerm_network_interface.SH_nic_un.id
   ]
 
-
   os_disk {
-    name                 = "OSDisk-SH-UN"
+    name                 = "OSDisk-SH-PRD"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
 
-  # Windows Server OS only
   source_image_reference {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
@@ -129,7 +130,7 @@ resource "azurerm_windows_virtual_machine" "VM_Self_Hosted_un" {
     version   = "latest"
   }
 
-  computer_name = "SelfHostedAgent"
+  computer_name = "SelfHostedAgPRD"
 }
 
 ########################
