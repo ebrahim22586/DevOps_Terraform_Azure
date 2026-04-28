@@ -19,7 +19,7 @@ provider "azurerm" {
 }
 
 provider "azurerm" { 
-  alias = "SUb-TST"
+  alias = "Sub-TST"
   features {}
   tenant_id       = var.IB_Tenant_id
   subscription_id = var.IB_Sub_TST
