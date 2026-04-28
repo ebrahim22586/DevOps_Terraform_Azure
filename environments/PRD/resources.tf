@@ -85,7 +85,7 @@ resource "azurerm_network_interface" "SH_nic_un" {
 
   ip_configuration {
     name                          = "ipconfig1PRD"
-    subnet_id                     = azurerm_subnet.hub_subnets["SNet-Self-Hosted-PRD"].id
+    subnet_id                     = azurerm_subnet.VNet_subnets["SNet-Self-Hosted-PRD"].id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.SH_pip_un.id
   }
