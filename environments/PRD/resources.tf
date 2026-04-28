@@ -85,7 +85,7 @@ resource "azurerm_network_interface" "SH_nic_un" {
 
   ip_configuration {
     name                          = "ipconfig1PRD"
-    subnet_id                     = azurerm_subnet.hub_subnets["SNet-Self-Hosted-UN"].id
+    subnet_id                     = azurerm_subnet.hub_subnets["SNet-Self-Hosted-PRD"].id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.SH_pip_un.id
   }
@@ -102,7 +102,7 @@ resource "azurerm_network_interface_security_group_association" "SH_nic_nsg_un" 
 ########################
 resource "azurerm_ubuntu_virtual_machine" "VM_Self_Hosted_un" {
   provider            = azurerm.Sub-PRD
-  name                = "VM_Self_Hosted-PRD"
+  name                = "VM_Self_Hosted-STG"
 
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
@@ -134,9 +134,9 @@ resource "azurerm_ubuntu_virtual_machine" "VM_Self_Hosted_un" {
 }
 
 ########################
-# Output Public IP
+# Output
 ########################
 output "SH_un_public_ip" {
   value       = azurerm_public_ip.SH_pip_un.ip_address
-  description = "RDP to this IP on port 3389"
+  description = "Connect to this IP"
 }
