@@ -39,7 +39,7 @@ env:
   ARM_TENANT_ID: ${{ secrets.IB_TENANT }}
   ARM_USE_OIDC: "true"
   TF_VERSION: "~1.7"
-  WD: 'terraform/STG'
+  WD: "terraform\STG"
 
 jobs:
 
