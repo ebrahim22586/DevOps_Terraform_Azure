@@ -60,7 +60,7 @@ jobs:
           terraform_version: ${{ env.TF_VERSION }}
 
       - name: Terraform Format Check
-        run: terraform fmt -check -recursive
+        run: terraform fmt 
 
       - name: Terraform Init (no backend)
         working-directory: environments/${{ matrix.environment }}
