@@ -77,27 +77,23 @@ jobs:
 # ══════════════════════════════════════════════
 # STAGE 1 — TEST ENVIRONMENT (develop branch)
 # ══════════════════════════════════════════════
-  plan-tst:
-    name:  Plan 
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write       # Required for azure/login@v3 OIDC
-      contents: read
-#S    needs: validate
-    if: |
-      github.ref == 'refs/heads/develope' 
-     
+ plan-tst:
+   name: Plan
+   runs-on: ubuntu-latest
+   permissions:
+    id-token: write
+    contents: read
 
-    steps:
-      - uses: actions/checkout@v4
+   steps:
+    - uses: actions/checkout@v4
 
-      - name: Azure Login — TST
-        uses: azure/login@v3
-        with:
-          client-id: ${{ secrets.IB_CLIENTID }}       
-          tenant-id: ${{ secrets.IB_TENANT }}             
-          enable-AzPSSession: true
+    - name: Azure Login — TST
+      uses: azure/login@v3
+      with:
+        client-id: ${{ secrets.IB_CLIENTID }}
+        tenant-id: ${{ secrets.IB_TENANT }}
+        subscription-id: ${{ secrets.IB_SUB }}    # ← Put this back
+        enable-AzPSSession: true
 
-      - name: Run Azure Cli again
-        run: |
-          az account show --output none
+    - name: Verify Login
+      run: az account show --output table          # "0s" is not valid output format
