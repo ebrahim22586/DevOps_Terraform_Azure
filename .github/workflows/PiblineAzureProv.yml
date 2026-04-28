@@ -95,8 +95,7 @@ jobs:
         uses: azure/login@v3
         with:
           client-id: ${{ secrets.IB_CLIENTID }}       
-          tenant-id: ${{ secrets.IB_TENANT }}         
-          subscription-id: ${{ secrets.IB_SUB }}       
+          tenant-id: ${{ secrets.IB_TENANT }}             
           enable-AzPSSession: true
 
       - name: Run Azure Cli again
