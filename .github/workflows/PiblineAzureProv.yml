@@ -28,7 +28,7 @@ permissions:
 # REUSABLE ENV MATRIX
 # ──────────────────────────────────────────────
 env:
-  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+  ARM_TENANT_ID: ${{ secrets.IB_TENANT }}
   ARM_USE_OIDC: "true"
   TF_VERSION: "~1.7"
 
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        environment: [tst, stg, prd]
+        environment: [TST, STG, PRD]
     steps:
       - uses: actions/checkout@v4
 
