@@ -36,6 +36,8 @@ permissions:
 # REUSABLE ENV MATRIX
 # ──────────────────────────────────────────────
 env:
+  ARM_CLIENT_ID: ${{ secrets.IB_CLIENTID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.IB_SUB }}
   ARM_TENANT_ID: ${{ secrets.IB_TENANT }}
   ARM_USE_OIDC: "true"
   TF_VERSION: "~1.7"
@@ -82,11 +84,7 @@ jobs:
     if: |
       github.ref == 'refs/heads/develope' 
      
-    environment: plan-tst
-    env:
-      ARM_CLIENT_ID: ${{ secrets.IB_CLIENTID }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.IB_SUB }}
-      ARM_TENANT_ID: ${{ secrets.IB_TENANT }}
+
     steps:
       - uses: actions/checkout@v4
 
