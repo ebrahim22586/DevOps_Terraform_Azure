@@ -100,7 +100,7 @@ resource "azurerm_network_interface_security_group_association" "SH_nic_nsg_un" 
 ########################
 # Windows Jump Box VM
 ########################
-resource "azurerm_ubuntu_virtual_machine" "VM_Self_Hosted_un" {
+resource "azurerm_linux_virtual_machine" "VM_Self_Hosted_un" {
   provider            = azurerm.Sub-PRD
   name                = "VM_Self_Hosted-STG"
 
