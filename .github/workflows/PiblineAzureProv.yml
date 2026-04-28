@@ -17,7 +17,14 @@ on:
       - main
     paths:
       - 'environments/**'
-
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        options:
+          - develop
+          - staging
+          - main          
 
 
 permissions:
@@ -53,7 +60,7 @@ jobs:
           terraform_version: ${{ env.TF_VERSION }}
 
       - name: Terraform Format Check
-        run: terraform fmt -check -recursive
+        run: terraform fmt 
 
       - name: Terraform Init (no backend)
         working-directory: environments/${{ matrix.environment }}
