@@ -1,13 +1,13 @@
 ########## RG ########
 resource "azurerm_resource_group" "rg_SelfHosted_Vm_un" {
-  provider = azurerm.Sub-TST
+  provider = azurerm.Sub-STG
   name     = "RG-STG-UN"
   location = "UAE North"
 }
 
 ###### VNet ########
 resource "azurerm_virtual_network" "vnet_SelfHosted_Vm_un" {
-  provider            = azurerm.Sub-TST
+  provider            = azurerm.Sub-STG
   name                = "VNet-SelfHosted-STG"
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
@@ -23,7 +23,7 @@ locals {
 
 resource "azurerm_subnet" "VNet_subnets" {
   for_each             = local.VNet_subnets
-  provider             = azurerm.Sub-TST
+  provider             = azurerm.Sub-STG
   name                 = each.key
   resource_group_name  = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   virtual_network_name = azurerm_virtual_network.vnet_SelfHosted_Vm_un.name
@@ -34,7 +34,7 @@ resource "azurerm_subnet" "VNet_subnets" {
 # Public IP
 ########################
 resource "azurerm_public_ip" "SH_pip_un" {
-  provider            = azurerm.Sub-TST
+  provider            = azurerm.Sub-STG
   name                = "PIP-SH-STG"
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
@@ -47,7 +47,7 @@ resource "azurerm_public_ip" "SH_pip_un" {
 # NSG
 ########################
 resource "azurerm_network_security_group" "SH_nsg_un" {
-  provider            = azurerm.Sub-TST
+  provider            = azurerm.Sub-STG
   name                = "NSG-SH-STG"
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
@@ -69,7 +69,7 @@ resource "azurerm_network_security_group" "SH_nsg_un" {
 # NIC
 ########################
 resource "azurerm_network_interface" "SH_nic_un" {
-  provider            = azurerm.Sub-TST
+  provider            = azurerm.Sub-STG
   name                = "NIC-SH-STG"
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
@@ -92,7 +92,7 @@ resource "azurerm_network_interface_security_group_association" "SH_nic_nsg_un" 
 # Ubuntu VM
 ########################
 resource "azurerm_ubuntu_virtual_machine" "VM_Self_Hosted_un" {
-  provider            = azurerm.Sub-TST
+  provider            = azurerm.Sub-STG
   name                = "VM_Self_Hosted-STG"
 
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name

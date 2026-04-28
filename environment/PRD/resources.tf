@@ -1,7 +1,7 @@
 
 ########## RG ########
 resource "azurerm_resource_group" "rg_SelfHosted_Vm_un" {
-  provider = azurerm.Sub-TST
+  provider = azurerm.Sub-PRD
   name     = "RG-PRD-UN"
   location = "UAE North"
 }
@@ -9,7 +9,7 @@ resource "azurerm_resource_group" "rg_SelfHosted_Vm_un" {
 
 ###### VNet ########
 resource "azurerm_virtual_network" "vnet_SelfHosted_Vm_un" {
-  provider            = azurerm.Sub-TST
+  provider            = azurerm.Sub-PRD
   name                = "VNet-SelfHosted-PRD"
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
@@ -28,7 +28,7 @@ locals {
 
 resource "azurerm_subnet" "VNet_subnets" {
   for_each             = local.VNet_subnets
-  provider             = azurerm.Sub-TST
+  provider             = azurerm.Sub-PRD
   name                 = each.key
   resource_group_name  = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   virtual_network_name = azurerm_virtual_network.vnet_SelfHosted_Vm_un.name
@@ -41,7 +41,7 @@ resource "azurerm_subnet" "VNet_subnets" {
 # Public IP
 ########################
 resource "azurerm_public_ip" "SH_pip_un" {
-  provider            = azurerm.Sub-TST
+  provider            = azurerm.Sub-PRD
   name                = "PIP-SH-PRD"
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
@@ -54,7 +54,7 @@ resource "azurerm_public_ip" "SH_pip_un" {
 # NSG SH_VM Box
 ########################
 resource "azurerm_network_security_group" "SH_nsg_un" {
-  provider            = azurerm.Sub-TST
+  provider            = azurerm.Sub-PRD
   name                = "NSG-SH-PRD"
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
@@ -78,7 +78,7 @@ resource "azurerm_network_security_group" "SH_nsg_un" {
 # NIC SNet-MGMT-UN
 ########################
 resource "azurerm_network_interface" "SH_nic_un" {
-  provider            = azurerm.Sub-TST
+  provider            = azurerm.Sub-PRD
   name                = "NIC-SH-PRD"
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
@@ -92,7 +92,7 @@ resource "azurerm_network_interface" "SH_nic_un" {
 }
 
 resource "azurerm_network_interface_security_group_association" "SH_nic_nsg_un" {
-  provider                  = azurerm.Sub-TST
+  provider                  = azurerm.Sub-PRD
   network_interface_id      = azurerm_network_interface.SH_nic_un.id
   network_security_group_id = azurerm_network_security_group.SH_nsg_un.id
 }
@@ -101,7 +101,7 @@ resource "azurerm_network_interface_security_group_association" "SH_nic_nsg_un" 
 # Windows Jump Box VM
 ########################
 resource "azurerm_ubuntu_virtual_machine" "VM_Self_Hosted_un" {
-  provider            = azurerm.Sub-TST
+  provider            = azurerm.Sub-PRD
   name                = "VM_Self_Hosted-PRD"
 
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name

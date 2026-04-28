@@ -15,7 +15,7 @@ provider "azurerm" {
   tenant_id       = var.IB_Tenant_id
   subscription_id = var.IB_Sub_STG
   client_id       = var.IB_Sub_STG_appid
-  client_secret   = var.IB_Sub_STG_st
+  #client_secret   = var.IB_Sub_STG_st
 }
 
 provider "azurerm" { 
@@ -24,7 +24,7 @@ provider "azurerm" {
   tenant_id       = var.IB_Tenant_id
   subscription_id = var.IB_Sub_TST
   client_id       = var.IB_Sub_TST_appid
-  client_secret   = var.IB_Sub_TST_st
+  #client_secret   = var.IB_Sub_TST_st
 }
 
 #Default provider
@@ -34,7 +34,7 @@ provider "azurerm" {
   tenant_id       = var.IB_Tenant_id
   subscription_id = var.IB_Sub_STG
   client_id       = var.IB_Sub_STG_appid
-  client_secret   = var.IB_Sub_STG_st
+  #client_secret   = var.IB_Sub_STG_st
 }
 
 
@@ -44,5 +44,5 @@ provider "azurerm" {
   tenant_id       = var.IB_Tenant_id
   subscription_id = var.IB_Sub_PRD
   client_id       = var.IB_Sub_PRD_appid
-  client_secret   = var.IB_Sub_PRD_st
+ # client_secret   = var.IB_Sub_PRD_st
 }
