@@ -86,6 +86,7 @@ jobs:
     env:
       ARM_CLIENT_ID: ${{ secrets.IB_CLIENTID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.IB_SUB }}
+      ARM_TENANT_ID: ${{ secrets.IB_TENANT }}
     steps:
       - uses: actions/checkout@v4
 
