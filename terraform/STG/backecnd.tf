@@ -8,6 +8,10 @@ terraform {
     storage_account_name = "backendsaterrazure"
     container_name       = "STGtfstate"
     key                  = "STG/fstate"
+
+    use_oidc  = true
+    client_id = "47b8a8ab-12d4-43e1-a567-62de87b2e2cc"  # ← This is likely missing
+
   }
 
 
