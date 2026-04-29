@@ -92,9 +92,9 @@ jobs:
     - name: Azure Login — TST
       uses: azure/login@v3
       with:
-        client-id: ${{ env.TF_VAR_CLIENT_ID }}
-        tenant-id: ${{ env.TF_VAR_CLIENT_ID }}
-        subscription-id: ${{ env.TF_VAR_SUBSCRIPTION_ID }}    # ← Put this back
+        client-id: ${{ secrets.IB_CLIENT_ID }}
+        tenant-id: ${{ secrets.IB_TENANT_ID }}
+        subscription-id: ${{ secrets.IB_SUB_441 }}    # ← Put this back
         enable-AzPSSession: true
 
     - name: Verify Login
