@@ -41,6 +41,7 @@ env:
   TF_VAR_TENANT_ID: ${{ secrets.IB_TENANT_ID}}
   TF_VAR_VM_USER: ${{secrets.SH_VM_USER }}
   TF_VAR_VM_PASS: ${{secrets.SH_VM_PASS }}
+  TF_VAR_SA_KEY:  ${{ secrets.SA_KEY }}
   ARM_USE_OIDC: "true"
   TF_VERSION: "~1.7"
   WD: "terraform/STG"

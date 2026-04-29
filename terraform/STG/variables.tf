@@ -3,7 +3,7 @@
 variable "IB_TENANT_ID" {}
 variable "IB_CLIENT_ID" {}
 
-
+variable "SA_KEY" {}
 
 variable "IB_SUB_441" {}
 
