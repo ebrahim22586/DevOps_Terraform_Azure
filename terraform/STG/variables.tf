@@ -1,14 +1,17 @@
-variable "IB_Tenant_id" {}
+
+
+variable "IB_TENANT_ID" {}
+variable "IB_CLIENT_ID" {}
 
 
 
-variable "IB_Sub_STG" {}
-variable "IB_Sub_STG_appid" {}
-variable "IB_Sub_STG_st" {}
+variable "IB_SUB_441" {}
 
 
 
 
 
-variable "SH_VM_Pass" {}
-variable "SH_VM_User" {}
+
+
+variable "SH_VM_PASS" {}
+variable "SH_VM_USER" {}

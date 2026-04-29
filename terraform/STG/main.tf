@@ -12,10 +12,10 @@ terraform {
 provider "azurerm" {
 
   features {}
-  tenant_id       = var.IB_Tenant_id
-  subscription_id = var.IB_Sub_STG
-  client_id       = var.IB_Sub_STG_appid
-  client_secret   = var.IB_Sub_STG_st
+  tenant_id       = var.IB_TENANT_ID
+  subscription_id = var.IB_SUB_441
+  client_id       = var.IB_CLIENT_ID
+  
 }
 
 
@@ -25,10 +25,10 @@ provider "azurerm" {
 provider "azurerm" {
   alias = "Sub-STG"
   features {}
-  tenant_id       = var.IB_Tenant_id
-  subscription_id = var.IB_Sub_STG
-  client_id       = var.IB_Sub_STG_appid
-  client_secret   = var.IB_Sub_STG_st
+  tenant_id       = var.IB_TENANT_ID
+  subscription_id = var.IB_SUB_441
+  client_id       = var.IB_CLIENT_ID
+ 
 }
 
 

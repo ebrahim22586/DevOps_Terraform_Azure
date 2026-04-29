@@ -36,9 +36,11 @@ permissions:
 # REUSABLE ENV MATRIX
 # ──────────────────────────────────────────────
 env:
-  ARM_CLIENT_ID: ${{ secrets.IB_CLIENTID }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.IB_SUB }}
-  ARM_TENANT_ID: ${{ secrets.IB_TENANT }}
+  TF_VAR_CLIENT_ID: ${{ secrets.IB_CLIENT_ID}}
+  TF_VAR_SUBSCRIPTION_ID: ${{ secrets.IB_SUB_441  }}
+  TF_VAR_TENANT_ID: ${{ secrets.IB_TENANT_ID}}
+  TF_VAR_VM_USER: ${{secrets.SH_VM_USER }}
+  TF_VAR_VM_PASS: ${{secrets.SH_VM_PASS }}
   ARM_USE_OIDC: "true"
   TF_VERSION: "~1.7"
   WD: "terraform/STG"
@@ -90,10 +92,40 @@ jobs:
     - name: Azure Login — TST
       uses: azure/login@v3
       with:
-        client-id: ${{ secrets.IB_CLIENT_ID }}
-        tenant-id: ${{ secrets.IB_TENANT_ID }}
-        subscription-id: ${{ secrets.IB_SUB_441 }}    # ← Put this back
+        client-id: ${{ env.TF_VAR_CLIENT_ID }}
+        tenant-id: ${{ env.TF_VAR_CLIENT_ID }}
+        subscription-id: ${{ env.TF_VAR_SUBSCRIPTION_ID }}    # ← Put this back
         enable-AzPSSession: true
 
     - name: Verify Login
       run: az account show --output table          # "0s" is not valid output format
+
+
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+    - name: Terraform Init
+      working-directory: ${{ env.WD }}
+      run: terraform init
+
+    - name: Terraform Plan
+      id: plan
+      working-directory: ${{ env.WD }}
+      run: |
+          terraform plan \
+            -out=tfplan-STG 
+
+
+     
+
+    - name: Upload TST Plan
+      uses: actions/upload-artifact@v4
+      with:
+          name: tfplan-tst
+          path: ${{ env.WD }}tfplan-STG
+          retention-days: 3
+     
+

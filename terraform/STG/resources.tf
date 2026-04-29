@@ -99,8 +99,8 @@ resource "azurerm_linux_virtual_machine" "VM_Self_Hosted_un" {
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
 
   size           = "Standard_D2_v3"
-  admin_username = var.SH_VM_User
-  admin_password = var.SH_VM_Pass
+  admin_username = var.SH_VM_USER
+  admin_password = var.SH_VM_PASS
 
   disable_password_authentication = false
 
