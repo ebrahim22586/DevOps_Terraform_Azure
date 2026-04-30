@@ -11,7 +11,7 @@ resource "azurerm_virtual_network" "vnet_SelfHosted_Vm_un" {
   name                = "VNet-SelfHosted-STG"
   location            = azurerm_resource_group.rg_SelfHosted_Vm_un.location
   resource_group_name = azurerm_resource_group.rg_SelfHosted_Vm_un.name
-  address_space       = ["10.10.16.0/24"]
+  address_space       = ["10.10.16.0/24","10.10.17.0/24"]
 }
 
 locals {
