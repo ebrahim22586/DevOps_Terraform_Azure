@@ -80,19 +80,14 @@ jobs:
 # ══════════════════════════════════════════════
 # STAGE 1 — TEST ENVIRONMENT (develop branch)
 # ══════════════════════════════════════════════
- plan-tst:
+ plan-stg:
    name: Plan
    runs-on: ubuntu-latest
    permissions:
     id-token: write
     contents: read
-   
-   
-
 
    steps:
-
-
     - uses: actions/checkout@v4
 
     - name: Azure Login — TST
@@ -130,8 +125,45 @@ jobs:
     - name: Upload TST Plan
       uses: actions/upload-artifact@v4
       with:
-          name: tfplan-tst
+          name: tfplan-stg
           path: ${{ env.WD }}/tfplan-STG
           retention-days: 3
      
 
+ apply-stg:
+   name: apply
+   needs: plan-stg
+   runs-on: ubuntu-latest
+   permissions:
+    id-token: write
+    contents: read
+     
+   steps:
+    - uses: actions/checkout@v4
+
+    - name: Azure Login — TST
+      uses: azure/login@v3
+      with:
+        client-id: ${{ secrets.IB_CLIENT_ID }}
+        tenant-id: ${{ secrets.IB_TENANT_ID }}
+        subscription-id: ${{ secrets.IB_SUB_441 }}    # ← Put this back
+        enable-AzPSSession: true
+        
+    - name: Download PRD Plan
+      uses: actions/download-artifact@v4
+      with:
+          name: tfplan-prd
+          path: ${{ env.WD }}/tfplan-STG
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+    - name: Terraform Init
+      working-directory: ${{ env.WD }}
+      run: terraform init
+
+    - name: Terraform Apply
+      working-directory: ${{ env.WD }}
+      run: terraform apply -auto-approve tfplan-prd
