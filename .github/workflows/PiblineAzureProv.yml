@@ -36,12 +36,7 @@ permissions:
 # REUSABLE ENV MATRIX
 # ──────────────────────────────────────────────
 env:
-  TF_VAR_CLIENT_ID: ${{ secrets.IB_CLIENT_ID}}
-  TF_VAR_SUBSCRIPTION_ID: ${{ secrets.IB_SUB_441  }}
-  TF_VAR_TENANT_ID: ${{ secrets.IB_TENANT_ID}}
-  TF_VAR_VM_USER: ${{secrets.SH_VM_USER }}
-  TF_VAR_VM_PASS: ${{secrets.SH_VM_PASS }}
-  TF_VAR_SA_KEY:  ${{ secrets.SA_KEY }}
+
   ARM_USE_OIDC: "true"
   TF_VERSION: "~1.7"
   WD: "terraform/STG"
@@ -86,8 +81,19 @@ jobs:
    permissions:
     id-token: write
     contents: read
+   env:
+           TF_VAR_CLIENT_ID: ${{ secrets.IB_CLIENT_ID}}
+           TF_VAR_SUBSCRIPTION_ID: ${{ secrets.IB_SUB_441  }}
+           TF_VAR_TENANT_ID: ${{ secrets.IB_TENANT_ID}}
+           TF_VAR_VM_USER: ${{secrets.SH_VM_USER }}
+           TF_VAR_VM_PASS: ${{secrets.SH_VM_PASS }}
+           TF_VAR_SA_KEY:  ${{ secrets.SA_KEY }}
+   
+
 
    steps:
+
+
     - uses: actions/checkout@v4
 
     - name: Azure Login — TST
