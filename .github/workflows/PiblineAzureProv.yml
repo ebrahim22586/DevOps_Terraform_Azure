@@ -152,7 +152,7 @@ jobs:
     - name: Download PRD Plan
       uses: actions/download-artifact@v4
       with:
-          name: tfplan-prd
+          name: tfplan-stg
           path: ${{ env.WD }}/tfplan-STG
 
     - name: Setup Terraform
@@ -166,4 +166,4 @@ jobs:
 
     - name: Terraform Apply
       working-directory: ${{ env.WD }}
-      run: terraform apply -auto-approve tfplan-prd
+      run: terraform apply -auto-approve tfplan-stg
