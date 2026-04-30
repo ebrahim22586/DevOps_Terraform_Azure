@@ -170,7 +170,7 @@ jobs:
 
 
  destroy-stg:
-   name: apply
+   name: destroy
    needs: apply-stg
    runs-on: ubuntu-latest
    environment: STG
