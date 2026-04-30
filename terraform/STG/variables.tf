@@ -1,17 +1,17 @@
 
 
-variable "IB_TENANT_ID" {}
-variable "IB_CLIENT_ID" {}
+variable "tenant_id" {}
+variable "client_id" {}
 
-variable "SA_KEY" {}
+variable "sa_key" {}
 
-variable "IB_SUB_441" {}
-
-
+variable "subscription_id" {}
 
 
 
 
 
-variable "SH_VM_PASS" {}
-variable "SH_VM_USER" {}
+
+
+variable "sh_vm_pass" {}
+variable "sh_vm_user" {}
